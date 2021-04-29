@@ -17,3 +17,10 @@ class Student(models.Model):
     def get_absolute_url(self):
         return reverse('profile', args=[str(self.id)])
 
+
+class Course(models.Model):
+    id = models.AutoField(primary_key=True)
+    course_name = models.CharField(max_length=255)
+    credit = models.IntegerField()
+
+
