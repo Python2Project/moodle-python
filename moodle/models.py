@@ -51,4 +51,9 @@ class TeacherToCourse(models.Model):
     course_id = models.ForeignKey(Course.id, on_delete=models.CASCADE, null=False)
 
 
+class StudentToCourse(models.Model):
+    id = models.AutoField(primary_key=True)
+    student_id = models.ForeignKey(Student.id, on_delete=models.CASCADE, null=False)
+    course_id = models.ForeignKey(Course.id, on_delete=models.CASCADE, null=False)
+    grade = models.IntegerField(null=True)
 
