@@ -47,13 +47,32 @@ class Teacher(models.Model):
 
 class TeacherToCourse(models.Model):
     id = models.AutoField(primary_key=True)
-    teacher_id = models.ForeignKey(Teacher.id, on_delete=models.CASCADE, null=False)
-    course_id = models.ForeignKey(Course.id, on_delete=models.CASCADE, null=False)
+    teacher = models.ForeignKey('Teacher', on_delete=models.CASCADE, null=False)
+    course = models.ForeignKey('Course', on_delete=models.CASCADE, null=False)
 
 
 class StudentToCourse(models.Model):
     id = models.AutoField(primary_key=True)
-    student_id = models.ForeignKey(Student.id, on_delete=models.CASCADE, null=False)
-    course_id = models.ForeignKey(Course.id, on_delete=models.CASCADE, null=False)
+    student = models.ForeignKey('Student', on_delete=models.CASCADE, null=False)
+    course = models.ForeignKey('Course', on_delete=models.CASCADE, null=False)
     grade = models.IntegerField(null=True)
 
+
+class Task(models.Model):
+    id = models.AutoField(primary_key=True)
+    task_name = models.CharField(max_length=255, null=False)
+    deadline = models.DateTimeField(null=False)
+    created_on = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.task_name
+
+    def get_absolute_url(self):
+        return reverse('task', args=[str(self.id)])
+
+
+class StudentToTask(models.Model):
+    id = models.AutoField(primary_key=True)
+    task = models.ForeignKey('Task', on_delete=models.CASCADE)
+    submission_document = models.FileField(upload_to='files/tasks/')
+    grade = models.IntegerField(null=False)
