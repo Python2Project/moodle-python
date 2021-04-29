@@ -23,4 +23,8 @@ class Course(models.Model):
     course_name = models.CharField(max_length=255)
     credit = models.IntegerField()
 
+    def __str__(self):
+        return self.course_name
 
+    def get_absolute_url(self):
+        return reverse('course', args=[str(self.id)])
