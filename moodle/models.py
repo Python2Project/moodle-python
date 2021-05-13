@@ -1,3 +1,6 @@
+import jwt
+from datetime import datetime, timedelta
+from django.conf import settings
 from django.db import models
 from django.urls import reverse
 
@@ -10,12 +13,34 @@ class Student(models.Model):
     groupname = models.CharField(max_length=255, help_text="Enter your email, please!", null=False)
     user_picture = models.FileField(upload_to='images/student/')
     password = models.CharField(max_length=255, help_text="Enter your password!", null=False)
+    is_staff = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
+
+    USERNAME_FIELD = 'email'
+
+    REQUIRED_FIELDS = ('email',)
+
+    objects = UserManager()
 
     def __str__(self):
-        return self.firstname
+        return self.email
 
-    def get_absolute_url(self):
-        return reverse('profile', args=[str(self.id)])
+    @property
+    def token(self):
+        return self._generate_jwt_token()
+
+    def get_full_name(self):
+        return self.firstname + self.lastname
+
+    def _generate_jwt_token(self):
+        dt = datetime.now() + timedelta(days=60)
+
+        token = jwt.encode({
+            'id': self.pk,
+            'exp': int(dt.strftime('%s'))
+        }, settings.SECRET_KEY, algorithm='HS256')
+
+        return token.decode('utf-8')
 
 
 class Course(models.Model):
@@ -37,12 +62,28 @@ class Teacher(models.Model):
     lastname = models.CharField(max_length=255, help_text="Enter your Last Name, please!", null=False)
     user_picture = models.FileField(upload_to='images/teacher/')
     password = models.CharField(max_length=255, help_text="Enter your password!", null=False)
+    is_staff = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
 
     def __str__(self):
-        return self.firstname
+        return self.email
 
-    def get_absolute_url(self):
-        return reverse('teacher', args=[str(self.id)])
+    @property
+    def token(self):
+        return self._generate_jwt_token()
+
+    def get_full_name(self):
+        return self.firstname + self.lastname
+
+    def _generate_jwt_token(self):
+        dt = datetime.now() + timedelta(days=60)
+
+        token = jwt.encode({
+            'id': self.pk,
+            'exp': int(dt.strftime('%s'))
+        }, settings.SECRET_KEY, algorithm='HS256')
+
+        return token.decode('utf-8')
 
 
 class TeacherToCourse(models.Model):
