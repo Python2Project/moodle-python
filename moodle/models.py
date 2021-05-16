@@ -11,6 +11,11 @@ from moodle.manager import UserManager, StudentManager, TeacherManager
 class User(AbstractUser):
     is_student = models.BooleanField(default=False)
     is_teacher = models.BooleanField(default=False)
+    email = models.EmailField(unique=True, null=False)
+
+    USERNAME_FIELD = 'email'
+
+    REQUIRED_FIELDS = ('username',)
 
     objects = UserManager()
 

@@ -5,16 +5,11 @@ from .models import User, Student, Teacher
 
 
 class RegistrationSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(
-        max_length=128,
-        min_length=8,
-        write_only=True
-    )
     token = serializers.CharField(max_length=255, read_only=True)
 
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'username', 'email', 'password', 'is_student', 'is_teacher', 'token',)
+        fields = ['username', 'email', 'password', 'first_name', 'last_name',  'is_student', 'is_teacher', 'token']
 
     def create(self, validated_data):
         user = User.objects.create_user(**validated_data)
@@ -28,11 +23,6 @@ class RegistrationSerializer(serializers.ModelSerializer):
 
 
 class LoginSerializer(serializers.Serializer):
-    """
-      Authenticates an existing user.
-      Email and password are required.
-      Returns a JSON web token.
-    """
 
     email = serializers.EmailField(write_only=True)
     password = serializers.CharField(max_length=128, write_only=True)
@@ -42,10 +32,6 @@ class LoginSerializer(serializers.Serializer):
     token = serializers.CharField(max_length=255, read_only=True)
 
     def validate(self, data):
-        """
-        Validates user data.
-        """
-
         email = data.get('email', None)
         password = data.get('password', None)
 
