@@ -23,7 +23,7 @@ class Student(AbstractBaseUser):
     user_picture = models.FileField(upload_to='images/student/')
     password = models.CharField(max_length=255, help_text="Enter your password!", null=False)
     is_staff = models.BooleanField(default=False)
-    is_superuser = models.BooleanField(default=True)
+    is_superuser = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'email'
 
@@ -54,6 +54,11 @@ class Student(AbstractBaseUser):
 
         return token.decode('utf-8')
 
+    def has_module_perms(self, app_label):
+        return self.is_superuser
+
+    def has_perm(self, perm, obj=None):
+        return self.is_superuser
 
 class Course(models.Model):
     id = models.AutoField(primary_key=True)
@@ -80,7 +85,7 @@ class Teacher(AbstractBaseUser):
     user_picture = models.FileField(upload_to='images/teacher/')
     password = models.CharField(max_length=255, help_text="Enter your password!", null=False)
     is_staff = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=True)
+    is_superuser = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'email'
 
@@ -111,6 +116,11 @@ class Teacher(AbstractBaseUser):
 
         return token.decode('utf-8')
 
+    def has_module_perms(self, app_label):
+        return self.is_superuser
+
+    def has_perm(self, perm, obj=None):
+        return self.is_superuser
 
 class TeacherToCourse(models.Model):
     id = models.AutoField(primary_key=True)
