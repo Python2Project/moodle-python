@@ -2,6 +2,8 @@ from django.contrib.auth import authenticate
 from rest_framework import serializers
 
 from .models import Student
+
+
 class RegistrationSerializer(serializers.ModelSerializer):
     """
     Creates a new user.
@@ -27,6 +29,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         return Student.objects.create_user(**validated_data)
 
+
 class LoginSerializer(serializers.Serializer):
     """
       Authenticates an existing user.
@@ -47,7 +50,7 @@ class LoginSerializer(serializers.Serializer):
         """
 
         email = data.get('email', None)
-        password  = data.get('password', None)
+        password = data.get('password', None)
 
         if email is None:
             raise serializers.ValidationError(
@@ -73,4 +76,3 @@ class LoginSerializer(serializers.Serializer):
         return {
             'token': user.token,
         }
-

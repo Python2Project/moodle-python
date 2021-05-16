@@ -116,7 +116,7 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
         ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'authentication.backends.JWTAuthentication',
+        'moodle.backends.JWTAuthentication',
         )
 }
 
@@ -145,3 +145,4 @@ STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'moodle.Student'
+

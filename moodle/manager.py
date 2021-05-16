@@ -17,24 +17,24 @@ class UserManager(BaseUserManager):
 
         return user
 
+    def create_user(self, username, email, password=None, **extra_fields):
+        """
+        Создает и возвращает `User` с адресом электронной почты,
+        именем пользователя и паролем.
+        """
+        extra_fields.setdefault('is_staff', False)
+        extra_fields.setdefault('is_superuser', False)
 
-def create_user(self, username, email, password=None, **extra_fields):
+        return self._create_user(username, email, password, **extra_fields)
 
-    extra_fields.setdefault('is_staff', False)
-    extra_fields.setdefault('is_superuser', False)
+    def create_superuser(self, username, email, password, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
 
-    return self._create_user(self, username, email, password, **extra_fields)
+        if extra_fields.get('is_staff') is not True:
+            raise ValueError('Superuser must have is_staff = True')
 
+        if extra_fields.get('is_superuser') is not True:
+            raise ValueError('Superuser must have is_superuser=True')
 
-def create_superuser(self, username, email, password, **extra_fields):
-    extra_fields.setdefault('is_staff', True)
-    extra_fields.setdefault('is_superuser', True)
-
-    if extra_fields.get('is_staff') is not True:
-        raise ValueError('Superuser must have is_staff = True')
-
-    if extra_fields.get('is_superuser') is not True:
-        raise ValueError('Superuser must have is_superuser=True')
-
-    return self._create_user(username, email, password, **extra_fields)
-
+        return self._create_user(username, email, password, **extra_fields)

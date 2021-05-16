@@ -1,6 +1,7 @@
 import jwt
 from datetime import datetime, timedelta
 from django.conf import settings
+from django.contrib.auth.base_user import AbstractBaseUser
 from django.core import validators
 from django.db import models
 from django.urls import reverse
@@ -8,9 +9,9 @@ from django.urls import reverse
 from moodle.manager import UserManager
 
 
-class Student(models.Model):
+class Student(AbstractBaseUser):
     id = models.AutoField(primary_key=True)
-    username = models.CharField(db_index=True, max_length=255, unique=True)
+    username = models.CharField(db_index=True, max_length=255, unique=True, null=False, default=False)
     email = models.EmailField(
         validators=[validators.validate_email],
         unique=True,
@@ -22,7 +23,7 @@ class Student(models.Model):
     user_picture = models.FileField(upload_to='images/student/')
     password = models.CharField(max_length=255, help_text="Enter your password!", null=False)
     is_staff = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=True)
+    is_superuser = models.BooleanField(default=True)
 
     USERNAME_FIELD = 'email'
 
@@ -66,9 +67,9 @@ class Course(models.Model):
         return reverse('course', args=[str(self.id)])
 
 
-class Teacher(models.Model):
+class Teacher(AbstractBaseUser):
     id = models.AutoField(primary_key=True)
-    username = models.CharField(db_index=True, max_length=255, unique=True)
+    username = models.CharField(db_index=True, max_length=255, unique=True, null=False, default=False)
     email = models.EmailField(
         validators=[validators.validate_email],
         unique=True,
