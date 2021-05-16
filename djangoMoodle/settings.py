@@ -84,7 +84,7 @@ DATABASES = {
 
         'USER': 'postgres',
 
-        'PASSWORD': 'postgres',
+        'PASSWORD': 'beks300900',
 
         'HOST': 'localhost',
 
@@ -144,5 +144,5 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = 'moodle.Student'
+AUTH_USER_MODEL = 'moodle.User'
 

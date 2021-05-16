@@ -19,10 +19,10 @@ from django.contrib import admin
 from django.urls import path, include, re_path
 from django.views.generic import RedirectView
 
-from moodle.views import RegistrationAPIView, RegistrationTeacherAPIView
+from moodle.views import RegistrationAPIView
 
 urlpatterns = [
-    path('admin/moodle/teacher/add/', RegistrationTeacherAPIView.as_view(), name='teacher_registration'),
+    path('admin/moodle/teacher/add/', RegistrationAPIView.as_view(), name='teacher_registration'),
     path('admin/moodle/student/add/', RegistrationAPIView.as_view(), name='student_registration'),
     path('admin/', admin.site.urls),
 ]

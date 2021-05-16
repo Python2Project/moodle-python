@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 
-from .serializers import LoginSerializer, RegistrationTeacherSerializer
+from .serializers import LoginSerializer
 from .serializers import RegistrationSerializer
 
 
@@ -50,30 +50,3 @@ class LoginAPIView(APIView):
         serializer.is_valid(raise_exception=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-class RegistrationTeacherAPIView(APIView):
-    """
-    Registers a new user.
-    """
-    permission_classes = [AllowAny]
-    serializer_class = RegistrationTeacherSerializer
-
-    def post(self, request):
-        """
-        Creates a new User object.
-        Username, email, and password are required.
-        Returns a JSON web token.
-        """
-        serializer = self.serializer_class(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-
-        return Response(
-            {
-                'token': serializer.data.get('token', None),
-            },
-            status=status.HTTP_201_CREATED,
-        )
-
-
