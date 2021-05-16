@@ -1,6 +1,28 @@
 from django.contrib.auth.base_user import BaseUserManager
 
 
+class StudentManager(BaseUserManager):
+
+    def _create_user(self, user=None):
+        student = self.model(user=user)
+        student.save(using=self._db)
+        return student
+
+    def create_user(self, user=None):
+        return self._create_user(user)
+
+
+class TeacherManager(BaseUserManager):
+
+    def _create_user(self, user=None):
+        teacher = self.model(user=user)
+        teacher.save(using=self._db)
+        return teacher
+
+    def create_user(self, user=None):
+        return self._create_user(user)
+
+
 class UserManager(BaseUserManager):
 
     def _create_user(self, username, email, password=None, **extra_fields):
@@ -14,14 +36,9 @@ class UserManager(BaseUserManager):
         user = self.model(username=username, email=email, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
-
         return user
 
     def create_user(self, username, email, password=None, **extra_fields):
-        """
-        Создает и возвращает `User` с адресом электронной почты,
-        именем пользователя и паролем.
-        """
         extra_fields.setdefault('is_staff', False)
         extra_fields.setdefault('is_superuser', False)
 

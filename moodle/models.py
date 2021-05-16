@@ -5,22 +5,14 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.urls import reverse
 
+from moodle.manager import UserManager, StudentManager, TeacherManager
+
 
 class User(AbstractUser):
-    is_student = models.BooleanField()
-    is_teacher = models.BooleanField()
+    is_student = models.BooleanField(default=False)
+    is_teacher = models.BooleanField(default=False)
 
-    def __str__(self):
-        return self.username
-
-
-class Student(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    group_name = models.CharField(max_length=255, help_text="Enter your email, please!", null=False)
-    user_picture = models.FileField(upload_to='images/student/')
-
-    def __str__(self):
-        return self.user.username
+    objects = UserManager()
 
     @property
     def token(self):
@@ -31,10 +23,25 @@ class Student(models.Model):
 
         token = jwt.encode({
             'id': self.pk,
-            'exp': int(dt.strftime('%s'))
+            'exp': int(dt.strftime('%S'))
         }, settings.SECRET_KEY, algorithm='HS256')
 
-        return token.decode('utf-8')
+        return token
+
+    def __str__(self):
+        return self.username
+
+
+class Student(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user.is_student = True
+    group_name = models.CharField(max_length=255, help_text="Enter your group, please!", null=True)
+    user_picture = models.FileField(upload_to='images/student/', null=True)
+
+    objects = StudentManager()
+
+    def __str__(self):
+        return self.user.username
 
     def has_module_perms(self, app_label):
         return self.user.is_superuser
@@ -45,24 +52,13 @@ class Student(models.Model):
 
 class Teacher(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    user_picture = models.FileField(upload_to='images/teacher/')
+    user.is_teacher = True
+    user_picture = models.FileField(upload_to='images/teacher/', null=True)
+
+    objects = TeacherManager()
 
     def __str__(self):
         return self.user.username
-
-    @property
-    def token(self):
-        return self._generate_jwt_token()
-
-    def _generate_jwt_token(self):
-        dt = datetime.now() + timedelta(days=60)
-
-        token = jwt.encode({
-            'id': self.pk,
-            'exp': int(dt.strftime('%s'))
-        }, settings.SECRET_KEY, algorithm='HS256')
-
-        return token.decode('utf-8')
 
     def has_module_perms(self, app_label):
         return self.user.is_superuser

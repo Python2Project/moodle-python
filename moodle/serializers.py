@@ -1,35 +1,30 @@
-from abc import ABC
-
 from django.contrib.auth import authenticate
 from rest_framework import serializers
 
-from .models import User
+from .models import User, Student, Teacher
 
 
 class RegistrationSerializer(serializers.ModelSerializer):
-    """
-    Creates a new user.
-    Email, username, and password are required.
-    Returns a JSON web token.
-    """
-
-    # The password must be validated and should not be read by the client
     password = serializers.CharField(
         max_length=128,
         min_length=8,
         write_only=True
     )
-
-    # The client should not be able to send a token along with a registration
-    # request. Making `token` read-only handles that for us.
     token = serializers.CharField(max_length=255, read_only=True)
 
     class Meta:
         model = User
-        fields = ('email', 'username', 'password', 'token',)
+        fields = ('first_name', 'last_name', 'username', 'email', 'password', 'is_student', 'is_teacher', 'token',)
 
     def create(self, validated_data):
-        return User.objects.create_user(**validated_data)
+        user = User.objects.create_user(**validated_data)
+        if user.is_teacher:
+            user.is_student = False
+            Teacher.objects.create_user(user)
+        if user.is_student:
+            user.is_teacher = False
+            Student.objects.create_user(user)
+        return user
 
 
 class LoginSerializer(serializers.Serializer):
