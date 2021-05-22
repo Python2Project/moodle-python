@@ -16,22 +16,14 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path, include, re_path
+from django.urls import path, include
 from django.views.generic import RedirectView
 
-from moodle.views import RegistrationAPIView
 
 urlpatterns = [
-    path('admin/moodle/teacher/add/', RegistrationAPIView.as_view(), name='teacher_registration'),
-    path('admin/moodle/student/add/', RegistrationAPIView.as_view(), name='student_registration'),
+    path('moodle/', include('moodle.urls')),
     path('admin/', admin.site.urls),
 ]
-
-urlpatterns += [
-    path('moodle/', include('moodle.urls')),
-
-]
-
 urlpatterns += [
     path('', RedirectView.as_view(url='/moodle/', permanent=True)),
 ]

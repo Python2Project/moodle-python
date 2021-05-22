@@ -1,6 +1,3 @@
-import jwt
-from datetime import datetime, timedelta
-from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.urls import reverse
@@ -18,20 +15,6 @@ class User(AbstractUser):
     REQUIRED_FIELDS = ('username',)
 
     objects = UserManager()
-
-    @property
-    def token(self):
-        return self._generate_jwt_token()
-
-    def _generate_jwt_token(self):
-        dt = datetime.now() + timedelta(days=60)
-
-        token = jwt.encode({
-            'id': self.pk,
-            'exp': int(dt.strftime('%S'))
-        }, settings.SECRET_KEY, algorithm='HS256')
-
-        return token
 
     def __str__(self):
         return self.username
@@ -115,3 +98,4 @@ class StudentToTask(models.Model):
     task = models.ForeignKey('Task', on_delete=models.CASCADE)
     submission_document = models.FileField(upload_to='files/tasks/')
     grade = models.IntegerField(null=False)
+
