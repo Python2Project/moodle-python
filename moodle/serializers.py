@@ -9,11 +9,9 @@ JWT_ENCODE_HANDLER = api_settings.JWT_ENCODE_HANDLER
 
 
 class RegistrationSerializer(serializers.ModelSerializer):
-    token = serializers.CharField(max_length=255, read_only=True)
-
     class Meta:
         model = User
-        fields = ['username', 'email', 'password', 'first_name', 'last_name', 'is_student', 'is_teacher', 'token']
+        fields = ['username', 'email', 'password', 'first_name', 'last_name', 'is_student', 'is_teacher']
 
     def create(self, validated_data):
         user = User.objects.create_user(**validated_data)
@@ -29,8 +27,6 @@ class RegistrationSerializer(serializers.ModelSerializer):
 class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField(write_only=True)
     password = serializers.CharField(max_length=128, write_only=True)
-
-    # Ignore these fields if they are included in the request.
     username = serializers.CharField(max_length=255, read_only=True)
     token = serializers.CharField(max_length=255, read_only=True)
 

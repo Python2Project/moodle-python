@@ -5,8 +5,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
-
-from .models import Student
+from .models import Student, Teacher
 from .serializers import LoginSerializer, RegistrationSerializer
 
 
@@ -17,13 +16,15 @@ class RegistrationAPIView(APIView):
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
-        user = serializer.create(serializer.data)
-        return Response(
-            {
-                'token': user.token,
-            },
-            status=status.HTTP_201_CREATED,
-        )
+        serializer.create(serializer.data)
+        status_code = status.HTTP_201_CREATED
+        response = {
+            'success': 'True',
+            'status code': status_code,
+            'message': 'User registered  successfully',
+        }
+
+        return Response(response, status=status_code)
 
 
 class LoginAPIView(APIView):
@@ -69,6 +70,35 @@ class StudentProfileView(RetrieveAPIView):
                     'first_name': user_profile.user.first_name,
                     'last_name': user_profile.user.last_name,
                     'group_name': user_profile.group_name,
+                    'email': user_profile.user.email,
+                }]
+            }
+        except Exception as e:
+            status_code = status.HTTP_400_BAD_REQUEST
+            response = {
+                'success': 'false',
+                'status code': status.HTTP_400_BAD_REQUEST,
+                'message': 'User does not exists',
+                'error': str(e)
+            }
+        return Response(response, status=status_code)
+
+
+class TeacherProfileView(RetrieveAPIView):
+    permission_classes = (IsAuthenticated,)
+    authentication_class = JSONWebTokenAuthentication
+
+    def get(self, request):
+        try:
+            user_profile = Teacher.objects.get(user=request.user)
+            status_code = status.HTTP_200_OK
+            response = {
+                'success': 'true',
+                'status code': status_code,
+                'message': 'User profile fetched successfully',
+                'data': [{
+                    'first_name': user_profile.user.first_name,
+                    'last_name': user_profile.user.last_name,
                     'email': user_profile.user.email,
                 }]
             }
