@@ -66,10 +66,10 @@ class StudentProfileView(RetrieveAPIView):
                 'status code': status_code,
                 'message': 'User profile fetched successfully',
                 'data': [{
-                    'first_name': user_profile.first_name,
-                    'last_name': user_profile.last_name,
+                    'first_name': user_profile.user.first_name,
+                    'last_name': user_profile.user.last_name,
                     'group_name': user_profile.group_name,
-                    'email': user_profile.email,
+                    'email': user_profile.user.email,
                 }]
             }
         except Exception as e:
