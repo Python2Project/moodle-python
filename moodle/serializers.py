@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import update_last_login
 from rest_framework import serializers
-from .models import User, Student, Teacher, Course, StudentToCourse
+from .models import User, Student, Teacher, Course, StudentToCourse, TeacherToCourse
 from rest_framework_jwt.settings import api_settings
 
 JWT_PAYLOAD_HANDLER = api_settings.JWT_PAYLOAD_HANDLER
@@ -75,3 +75,10 @@ class StudentToCourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = StudentToCourse
         fields = '__all__'
+
+
+class TeacherToCourseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TeacherToCourse
+        fields = '__all__'
+
