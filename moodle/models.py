@@ -23,7 +23,7 @@ class User(AbstractUser):
 class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     user.is_student = True
-    group_name = models.CharField(max_length=255, help_text="Enter your group, please!", null=True)
+    group = models.OneToOneField('Groups', on_delete=models.CASCADE, null=True)
     user_picture = models.FileField(upload_to='images/student/', null=True)
 
     objects = StudentManager()
@@ -36,6 +36,11 @@ class Student(models.Model):
 
     def has_perm(self, perm, obj=None):
         return self.user.is_superuser
+
+
+class Groups(models.Model):
+    id = models.AutoField(primary_key=True)
+    group_name = models.CharField(max_length=255, null=False)
 
 
 class Teacher(models.Model):
@@ -73,11 +78,10 @@ class TeacherToCourse(models.Model):
     course = models.ForeignKey('Course', on_delete=models.CASCADE, null=False)
 
 
-class StudentToCourse(models.Model):
+class GroupToCourse(models.Model):
     id = models.AutoField(primary_key=True)
-    student = models.ForeignKey('Student', on_delete=models.CASCADE, null=False)
+    group = models.ForeignKey('Groups', on_delete=models.CASCADE, null=False)
     course = models.ForeignKey('Course', on_delete=models.CASCADE, null=False)
-    grade = models.IntegerField(null=True)
 
 
 class Task(models.Model):
@@ -97,5 +101,5 @@ class StudentToTask(models.Model):
     id = models.AutoField(primary_key=True)
     task = models.ForeignKey('Task', on_delete=models.CASCADE)
     submission_document = models.FileField(upload_to='files/tasks/')
-    grade = models.IntegerField(null=False)
+    created_on = models.DateTimeField(auto_now_add=True)
 

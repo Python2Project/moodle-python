@@ -5,9 +5,9 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
-from .models import Student, Teacher, Course, StudentToCourse, TeacherToCourse, Task
-from .serializers import LoginSerializer, RegistrationSerializer, CourseSerializer, StudentToCourseSerializer, \
-    TeacherToCourseSerializer, TaskSerializer
+from .models import Student, Teacher, Course, GroupToCourse, TeacherToCourse, Task, StudentToTask, Groups
+from .serializers import LoginSerializer, RegistrationSerializer, CourseSerializer, GroupToCourseSerializer, \
+    TeacherToCourseSerializer, TaskSerializer, StudentToTaskSerializer, GroupSerializer
 
 
 class RegistrationAPIView(APIView):
@@ -126,16 +126,16 @@ class CourseDetailAPI(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = CourseSerializer
 
 
-class StudentToCourseAPI(generics.ListCreateAPIView):
+class GroupToCourseAPI(generics.ListCreateAPIView):
     permission_classes = [AllowAny]
-    queryset = StudentToCourse.objects.all()
-    serializer_class = StudentToCourseSerializer
+    queryset = GroupToCourse.objects.all()
+    serializer_class = GroupToCourseSerializer
 
 
-class StudentToCourseDetailAPI(generics.RetrieveUpdateDestroyAPIView):
+class GroupToCourseDetailAPI(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [AllowAny]
-    queryset = StudentToCourse.objects.all()
-    serializer_class = StudentToCourseSerializer
+    queryset = GroupToCourse.objects.all()
+    serializer_class = GroupToCourseSerializer
 
 
 class TeacherToCourseAPI(generics.ListCreateAPIView):
@@ -160,3 +160,27 @@ class TaskDetailAPI(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [AllowAny]
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
+
+
+class StudentToTaskAPI(generics.ListCreateAPIView):
+    permission_classes = [AllowAny]
+    queryset = StudentToTask.objects.all()
+    serializer_class = StudentToTaskSerializer
+
+
+class StudentToTaskDetailAPI(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [AllowAny]
+    queryset = StudentToTask.objects.all()
+    serializer_class = StudentToTaskSerializer
+
+
+class GroupsAPI(generics.ListCreateAPIView):
+    permission_classes = [AllowAny]
+    queryset = Groups.objects.all()
+    serializer_class = GroupSerializer
+
+
+class GroupDetailAPI(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [AllowAny]
+    queryset = Groups.objects.all()
+    serializer_class = GroupSerializer

@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import update_last_login
 from rest_framework import serializers
-from .models import User, Student, Teacher, Course, StudentToCourse, TeacherToCourse, Task
+from .models import User, Student, Teacher, Course, GroupToCourse, TeacherToCourse, Task, StudentToTask, Groups
 from rest_framework_jwt.settings import api_settings
 
 JWT_PAYLOAD_HANDLER = api_settings.JWT_PAYLOAD_HANDLER
@@ -65,15 +65,21 @@ class LoginSerializer(serializers.Serializer):
         }
 
 
+class GroupSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Groups
+        fields = '__all__'
+
+
 class CourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
         fields = '__all__'
 
 
-class StudentToCourseSerializer(serializers.ModelSerializer):
+class GroupToCourseSerializer(serializers.ModelSerializer):
     class Meta:
-        model = StudentToCourse
+        model = GroupToCourse
         fields = '__all__'
 
 
@@ -97,3 +103,9 @@ class TaskSerializer(serializers.Serializer):
         instance.deadline = validated_data.get('deadline', instance.deadline)
         instance.save()
         return instance
+
+
+class StudentToTaskSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StudentToTask
+        fields = '__all__'
