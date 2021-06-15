@@ -1,6 +1,6 @@
 from django.urls import path, re_path
 from .views import LoginAPIView, RegistrationAPIView, StudentProfileView, TeacherProfileView, CourseAPI, CourseDetailAPI, StudentToCourseDetailAPI, StudentToCourseAPI
-from .views import TeacherToCourseAPI, TeacherToCourseDetailAPI
+from .views import TeacherToCourseAPI, TeacherToCourseDetailAPI, TaskAPI, TaskDetailAPI
 urlpatterns = [
     path('teacher/add/', RegistrationAPIView.as_view(), name='teacher_registration'),
     path('student/add/', RegistrationAPIView.as_view(), name='student_registration'),
@@ -12,5 +12,7 @@ urlpatterns = [
     path('studentToCourse/', StudentToCourseAPI.as_view()),
     path('studentToCourse/<int:pk>', StudentToCourseDetailAPI.as_view()),
     path('teacherToCourse/', TeacherToCourseAPI.as_view()),
-    path('teacherToCourse/<int:pk>', TeacherToCourseDetailAPI.as_view())
+    path('teacherToCourse/<int:pk>', TeacherToCourseDetailAPI.as_view()),
+    path('task/', TaskAPI.as_view()),
+    path('task/<int:pk>', TaskDetailAPI.as_view())
 ]

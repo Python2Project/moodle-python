@@ -117,7 +117,8 @@ REST_FRAMEWORK = {
         ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-        )
+        ),
+    'DATE_INPUT_FORMATS': ["%d-%m-%Y", ]
 }
 
 # Internationalization

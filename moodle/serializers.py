@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import update_last_login
 from rest_framework import serializers
-from .models import User, Student, Teacher, Course, StudentToCourse, TeacherToCourse
+from .models import User, Student, Teacher, Course, StudentToCourse, TeacherToCourse, Task
 from rest_framework_jwt.settings import api_settings
 
 JWT_PAYLOAD_HANDLER = api_settings.JWT_PAYLOAD_HANDLER
@@ -82,3 +82,18 @@ class TeacherToCourseSerializer(serializers.ModelSerializer):
         model = TeacherToCourse
         fields = '__all__'
 
+
+class TaskSerializer(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)
+    task_name = serializers.CharField()
+    deadline = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
+    created_on = serializers.DateTimeField(read_only=True)
+
+    def create(self, validated_data):
+        return Task.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        instance.task_name = validated_data.get('task_name', instance.task_name)
+        instance.deadline = validated_data.get('deadline', instance.deadline)
+        instance.save()
+        return instance

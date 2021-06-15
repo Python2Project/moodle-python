@@ -5,9 +5,9 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
-from .models import Student, Teacher, Course, StudentToCourse, TeacherToCourse
+from .models import Student, Teacher, Course, StudentToCourse, TeacherToCourse, Task
 from .serializers import LoginSerializer, RegistrationSerializer, CourseSerializer, StudentToCourseSerializer, \
-    TeacherToCourseSerializer
+    TeacherToCourseSerializer, TaskSerializer
 
 
 class RegistrationAPIView(APIView):
@@ -148,3 +148,15 @@ class TeacherToCourseDetailAPI(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [AllowAny]
     queryset = TeacherToCourse.objects.all()
     serializer_class = TeacherToCourseSerializer
+
+
+class TaskAPI(generics.ListCreateAPIView):
+    permission_classes = [AllowAny]
+    queryset = Task.objects.all()
+    serializer_class = TaskSerializer
+
+
+class TaskDetailAPI(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [AllowAny]
+    queryset = Task.objects.all()
+    serializer_class = TaskSerializer
