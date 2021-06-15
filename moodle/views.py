@@ -1,12 +1,12 @@
-from rest_framework import status
+from rest_framework import status, generics
 from rest_framework.generics import RetrieveAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
-from .models import Student, Teacher
-from .serializers import LoginSerializer, RegistrationSerializer
+from .models import Student, Teacher, Course
+from .serializers import LoginSerializer, RegistrationSerializer, CourseSerializer
 
 
 class RegistrationAPIView(APIView):
@@ -111,3 +111,15 @@ class TeacherProfileView(RetrieveAPIView):
                 'error': str(e)
             }
         return Response(response, status=status_code)
+
+
+class CourseAPI(generics.ListCreateAPIView):
+    permission_classes = [AllowAny]
+    queryset = Course.objects.all()
+    serializer_class = CourseSerializer
+
+
+class CourseDetailAPI(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [AllowAny]
+    queryset = Course.objects.all()
+    serializer_class = CourseSerializer
